@@ -1,8 +1,7 @@
-Feature: My bootstrapped app kinda works
-  In order to get going on coding my awesome app
-  I want to have aruba and cucumber setup
-  So I don't have to do it myself
+Feature: We can initialize a config file 
+  In order to use the cli 
+  I want to initialize a config file
 
-  Scenario: App just runs
-    When I get help for "tm"
-    Then the exit status should be 0
+  Scenario: Tm with some options
+    When I successfully run "tm initconfig --provider 'kanbanpad' --authorization 'url:google.com,token:blah' initconfig"
+    Then the stdout should contain "Config file successfully created"
