@@ -13,7 +13,7 @@ end
 include GLI::App
 
 program_desc 'Command line interface for Taskmapper'
-config_file '~/.taskmapper.yml'
+config_file '.taskmapper.rc.yml'
 
 version Tm::VERSION
 
@@ -28,10 +28,27 @@ flag [:a, :authentication]
 desc 'Project handling' 
 arg_name 'Command for managing projects' 
 command :project do |c|
-  c.desc 'List all projects'
+  c.desc 'List projects'
+  c.long_desc """
+  List projects possible arguments 'all', 'single'. Default 'all'.
+  You can use the --filter flag and use flags like --name, --created, --updated
+  """
+  c.default_value 'all'
   c.flag [:l, :list]
 
+  c.desc 'Format of the output'
+  c.arg_name 'csv|pretty'
+  c.flag :format
+
   c.action do |global_options, options, args| 
+    if options[:format].nil?
+      if STDOUT.tty?
+        options[:format] = 'pretty'
+      else
+        options[:format] = 'csv'
+      end
+    end
+
     provider = global_options[:provider].to_sym
     authentication = global_options[:authentication].split(/,/).inject({}) do |res, kv|
       arg, val = kv.split(/:/)
@@ -40,10 +57,13 @@ command :project do |c|
     end
     require "taskmapper-#{provider}"
     tm = TaskMapper.new(provider, authentication)
-    if options[:list] == 'all'
-      projects = tm.projects
-      projects.each do |project|
-        printf("%s, %s, %s, %s \n", project.id, project.name, project.created_at, project.updated_at)
+    if options[:format] == 'pretty'
+    elsif options[:format] == 'csv'
+      if options[:list] == 'all'
+        projects = tm.projects
+        projects.each do |project|
+          printf("%s, %s, %s, %s \n", project.id, project.name, project.created_at, project.updated_at)
+        end
       end
     end
   end
