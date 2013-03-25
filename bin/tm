@@ -29,7 +29,7 @@ desc 'Project handling'
 arg_name 'Command for managing projects' 
 command :project do |c|
   c.desc 'List all projects'
-  c.switch [:a, :listall]
+  c.flag [:l, :list]
 
   c.action do |global_options, options, args| 
     provider = global_options[:provider].to_sym
@@ -40,7 +40,7 @@ command :project do |c|
     end
     require "taskmapper-#{provider}"
     tm = TaskMapper.new(provider, authentication)
-    if options[:listall] 
+    if options[:list] == 'all'
       projects = tm.projects
       projects.each do |project|
         printf("%s, %s, %s, %s \n", project.id, project.name, project.created_at, project.updated_at)
