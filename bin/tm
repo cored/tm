@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 require 'gli'
+require 'taskmapper'
 begin # XXX: Remove this begin/rescue before distributing your app
-require 'tm'
+  require 'tm'
 rescue LoadError
   STDERR.puts "In development, you need to use `bundle exec bin/tm` to run your app"
   STDERR.puts "At install-time, RubyGems will make sure lib, etc. are in the load path"
@@ -12,30 +13,55 @@ end
 include GLI::App
 
 program_desc 'Command line interface for Taskmapper'
+config_file '~/.taskmapper.yml'
 
 version Tm::VERSION
 
-desc 'Describe some switch here'
-switch [:s,:switch]
+desc 'Provider name'
+arg_name "kanbanpad, github, etc"
+flag [:p, :provider]
 
-command :initconfig do |c|
-  c.desc 'Provider name'
-  c.arg_name "'kanbanpad', 'github', etc"
-  c.flag [:p,:provider]
+desc 'Authentication for provider' 
+arg_name "'token:password, username:user'"
+flag [:a, :authentication]
 
-  c.desc 'Provider authorization'
-  c.arg_name "'url:https://kanbanpad.com/v1/api',token:kdjdkdkd'"
-  c.flag [:a, :authorization]
+desc 'Project handling' 
+arg_name 'Command for managing projects' 
+command :project do |c|
+  c.desc 'List all projects'
+  c.switch [:a, :listall]
 
-  c.action do |global_options,options,args|
+  c.action do |global_options, options, args| 
+    provider = global_options[:provider].to_sym
+    authentication = global_options[:authentication].split(/,/).inject({}) do |res, kv|
+      arg, val = kv.split(/:/)
+      res[arg] = val
+      res
+    end
+    require "taskmapper-#{provider}"
+    tm = TaskMapper.new(provider, authentication)
+    if options[:listall] 
+      projects = tm.projects
+      projects.each do |project|
+        printf("%s, %s, %s, %s \n", project.id, project.name, project.created_at, project.updated_at)
+      end
+    end
+  end
+end
 
+command :ticket do |c|
+  c.desc 'List all tickets for a given project'
+  c.flag [:p, :project]
 
-    # Your command logic here
-     
-    # If you have any errors, just raise them
-    # raise "that command made no sense"
-
-    puts "new command ran"
+  c.action do |global_options, options, args| 
+    provider = global_options[:provider].to_sym
+    authentication = global_options[:authentication].split(/,/).inject({}) do |res, kv|
+      arg, val = kv.split(/:/)
+      res[arg] = val
+      res
+    end
+    require "taskmapper-#{provider}"
+    tm = TaskMapper.new(provider, authentication)
   end
 end
 

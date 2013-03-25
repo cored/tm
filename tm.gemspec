@@ -20,8 +20,10 @@ lib/tm.rb
   s.rdoc_options << '--title' << 'tm' << '--main' << 'README.rdoc' << '-ri'
   s.bindir = 'bin'
   s.executables << 'tm'
+  s.add_dependency('taskmapper')
+  s.add_dependency('taskmapper-kanbanpad')
+
   s.add_development_dependency('rake')
   s.add_development_dependency('rdoc')
-  s.add_development_dependency('aruba')
   s.add_runtime_dependency('gli','2.5.5')
 end
