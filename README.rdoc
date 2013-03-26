@@ -1,4 +1,4 @@
-= `tm` - Command line interface for TaskMapper [http://github.com/hybridgroup/taskmapper]
+= tm - Command line interface for TaskMapper[http://github.com/hybridgroup/taskmapper]
 
 Author:: Rafael George (mailto: george.rafael@gmail.com)
 Copyright:: Copyright (c) 2013 by Rafael George
