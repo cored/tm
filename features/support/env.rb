@@ -8,8 +8,14 @@ Before do
   @puts = true
   @original_rubylib = ENV['RUBYLIB']
   ENV['RUBYLIB'] = LIB_DIR + File::PATH_SEPARATOR + ENV['RUBYLIB'].to_s
+
+  @real_home = ENV['HOME']
+  fake_home = File.join('/tmp', 'fake_home')
+  FileUtils.rm_rf fake_home, :secure => true
+  ENV['HOME'] = fake_home
 end
 
 After do
   ENV['RUBYLIB'] = @original_rubylib
+  ENV['HOME'] = @real_home
 end

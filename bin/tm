@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/../lib')
 require 'gli'
 require 'taskmapper'
+require 'tm'
+
+include TM
+
 begin # XXX: Remove this begin/rescue before distributing your app
   require 'tm'
 rescue LoadError
@@ -13,7 +18,7 @@ end
 include GLI::App
 
 program_desc 'Command line interface for Taskmapper'
-config_file '.taskmapper.rc.yml'
+config_file File.join(ENV['HOME'], '.taskmapper.rc.yml')
 
 version Tm::VERSION
 
@@ -49,21 +54,10 @@ command :project do |c|
       end
     end
 
-    provider = global_options[:provider].to_sym
-    authentication = global_options[:authentication].split(/,/).inject({}) do |res, kv|
-      arg, val = kv.split(/:/)
-      res[arg] = val
-      res
-    end
-    require "taskmapper-#{provider}"
-    tm = TaskMapper.new(provider, authentication)
     if options[:format] == 'pretty'
     elsif options[:format] == 'csv'
       if options[:list] == 'all'
-        projects = tm.projects
-        projects.each do |project|
-          printf("%s, %s, %s, %s \n", project.id, project.name, project.created_at, project.updated_at)
-        end
+        list_projects(global_options[:provider].to_sym, global_options[:authentication])
       end
     end
   end

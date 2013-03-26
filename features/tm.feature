@@ -1,5 +1,7 @@
-Feature: We can initialize a config file 
-  In order to use the cli 
-  I want to initialize a config file
+Feature: We can list projects
+  As a user with valid credentials set for a project
+  I want to be able to list all projects for an already set provider.
 
-  Scenario: Tm with some options
+  Scenario: List all projects
+    Given `tm --provider kanbanpad --authentication 'token:dkdk,username:username' project --list='all'`
+    Then The stdout should contain "Test Project"
