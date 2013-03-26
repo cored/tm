@@ -1,11 +1,14 @@
 require 'tm/version.rb'
+require 'taskmapper'
+require 'taskmapper-kanbanpad'
 
 module TM
 
   def list_projects(provider, authentication)
-    require "taskmapper-#{provider}"
     tm = TaskMapper.new(provider, format_authentication(authentication))
     print_projects(tm.projects)
+  rescue NameError => ex
+    ::Error.new("Provider doesn't exist")
   end
 
   private
@@ -23,4 +26,6 @@ module TM
       printf("%s, %s, %s, %s \n", project.id, project.name, project.created_at, project.updated_at)
     end
   end
+
+  class Error < StandardError; end;
 end
