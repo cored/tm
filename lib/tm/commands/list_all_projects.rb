@@ -7,9 +7,12 @@ module TM
       end
 
       def execute
-        @provider_handler.taskmapper.projects.each do |project|
+        projects = @provider_handler.taskmapper.projects
+        @formatter.before(projects.first)
+        projects.each do |project|
           @formatter.format(project)
         end
+        @formatter.after
       end
     end
   end

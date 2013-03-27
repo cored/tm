@@ -7,7 +7,10 @@ module TM
       end
 
       def execute
-        @formatter.format(@provider_handler.taskmapper.projects.last)
+        project = @provider_handler.taskmapper.projects.last
+        @formmater.before(project)
+        @formatter.format(project)
+        @formatter.after
       end
     end
   end

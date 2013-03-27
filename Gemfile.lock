@@ -6,6 +6,7 @@ PATH
       rainbow
       taskmapper
       taskmapper-kanbanpad
+      terminal-table
 
 GEM
   remote: https://rubygems.org/
@@ -58,6 +59,7 @@ GEM
       hashie (~> 1.2)
     taskmapper-kanbanpad (0.8.1)
       taskmapper (~> 0.8)
+    terminal-table (1.4.5)
 
 PLATFORMS
   ruby

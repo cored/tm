@@ -3,6 +3,9 @@ require 'rainbow'
 module TM
   module Format
     class Pretty
+      def before; end
+      def after; end
+
       def format(entity)
         entity.each_pair do |title, value|
           printf("%s: ", title.bright)
