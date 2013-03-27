@@ -1,7 +1,7 @@
 module TM
   module Format
     class CSV
-      def before; end
+      def before(entity); end
       def after; end
 
       def format(entity)

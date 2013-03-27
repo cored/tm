@@ -3,7 +3,7 @@ require 'rainbow'
 module TM
   module Format
     class Pretty
-      def before; end
+      def before(entity); end
       def after; end
 
       def format(entity)
