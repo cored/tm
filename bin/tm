@@ -55,7 +55,11 @@ command :project do |c|
   c.default_value 'pretty'
   c.flag :format
 
+  c.desc 'Disable color'
+  c.switch 'no-color'
+
   c.action do |global_options, options, args| 
+    Sickill::Rainbow.enabled = false if options[:'no-color'] 
     formatter = output_formats[options[:format]]
     command = project_commands[options[:list]]
     command.new(TM::ProviderHandler.build_handler(global_options[:provider], 

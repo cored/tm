@@ -22,6 +22,7 @@ lib/tm.rb
   s.executables << 'tm'
   s.add_dependency('taskmapper')
   s.add_dependency('taskmapper-kanbanpad')
+  s.add_dependency('rainbow')
 
   s.add_development_dependency('rake')
   s.add_development_dependency('rdoc')
