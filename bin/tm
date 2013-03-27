@@ -3,7 +3,6 @@ $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/../lib')
 require 'gli'
 require 'tm'
 
-
 include TM
 
 begin # XXX: Remove this begin/rescue before distributing your app
@@ -33,33 +32,32 @@ flag [:a, :authentication]
 desc 'Project handling' 
 arg_name 'Command for managing projects' 
 command :project do |c|
+  output_formats = {
+    'csv' => TM::Format::CSV.new,
+    'pretty' => 2
+  }
+  project_commands = { 
+    'all' => TM::Commands::ListAllProjects
+  }
   c.desc 'List projects'
   c.long_desc """
   List projects possible arguments 'all', 'single'. Default 'all'.
   You can use the --filter flag and use flags like --name, --created, --updated
   """
   c.default_value 'all'
+  c.arg_name project_commands.keys.join("|")
   c.flag [:l, :list]
 
   c.desc 'Format of the output'
-  c.arg_name 'csv|pretty'
+  c.arg_name output_formats.keys.join("|")
+  c.default_value 'pretty'
   c.flag :format
 
   c.action do |global_options, options, args| 
-    if options[:format].nil?
-      if STDOUT.tty?
-        options[:format] = 'pretty'
-      else
-        options[:format] = 'csv'
-      end
-    end
-
-    if options[:format] == 'pretty'
-    elsif options[:format] == 'csv'
-      if options[:list] == 'all'
-        list_projects(TM::ProviderHandler.build_handler(global_options[:provider], global_options[:authentication]))
-      end
-    end
+    formatter = output_formats[options[:format]]
+    command = project_commands[options[:list]]
+    command.new(TM::ProviderHandler.build_handler(global_options[:provider], 
+                                                        global_options[:authentication]), formatter).execute
   end
 end
 

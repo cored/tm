@@ -10,8 +10,7 @@ module TM
     end
 
     def self.build_handler(provider, authentication)
-      provider.to_sym
-      self.new(TaskMapper.new(provider, format_authentication(authentication)))
+      self.new(TaskMapper.new(provider.to_sym, format_authentication(authentication)))
     rescue NameError
       raise TM::InvalidProvider, "Provider doesn't exists" 
     end
