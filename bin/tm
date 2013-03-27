@@ -3,6 +3,7 @@ $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + '/../lib')
 require 'gli'
 require 'tm'
 
+
 include TM
 
 begin # XXX: Remove this begin/rescue before distributing your app
@@ -56,7 +57,7 @@ command :project do |c|
     if options[:format] == 'pretty'
     elsif options[:format] == 'csv'
       if options[:list] == 'all'
-        list_projects(global_options[:provider].to_sym, global_options[:authentication])
+        list_projects(TM::ProviderHandler.build_handler(global_options[:provider], global_options[:authentication]))
       end
     end
   end
