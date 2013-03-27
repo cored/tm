@@ -14,21 +14,24 @@ describe TM do
   end
 
   describe "without errors" do 
+    before(:each) do 
+      taskmapper.should_receive(:projects).and_return([tm_project])
+      TaskMapper.should_receive(:new).and_return(taskmapper)
+    end
     context :list_projects do 
-      before(:each) do 
-        taskmapper.should_receive(:projects).and_return([tm_project])
-        TaskMapper.should_receive(:new).and_return(taskmapper)
-      end
       subject { tm.list_projects(provider, authentication) } 
       its(:count) { should == 1 }
     end
   end
 
-  describe "with provider name error" do  
-    context :list_projects do 
-      subject { lambda { tm.list_projects(provider, authentication) } }
-      it { should raise_error }
+  describe "with arguments errors" do  
+    describe "when provider name is wrong" do 
+      context :list_projects do 
+        subject { lambda { tm.list_projects(provider, authentication) } }
+        it { should raise_error }
+      end
     end
+
   end
 
 end

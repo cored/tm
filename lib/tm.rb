@@ -8,7 +8,7 @@ module TM
     tm = TaskMapper.new(provider, format_authentication(authentication))
     print_projects(tm.projects)
   rescue NameError => ex
-    ::Error.new("Provider doesn't exist")
+    raise InvalidProvider, "Provider doesn't exist"    
   end
 
   private
@@ -27,5 +27,6 @@ module TM
     end
   end
 
-  class Error < StandardError; end;
+  class Error < StandardError; end
+  class InvalidProvider < Error; end
 end
