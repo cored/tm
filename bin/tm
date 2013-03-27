@@ -34,10 +34,12 @@ arg_name 'Command for managing projects'
 command :project do |c|
   output_formats = {
     'csv' => TM::Format::CSV.new,
-    'pretty' => 2
+    'pretty' => TM::Format::Pretty.new
   }
   project_commands = { 
-    'all' => TM::Commands::ListAllProjects
+    'all' => TM::Commands::ListAllProjects,
+    'first' => TM::Commands::FirstProject,
+    'last' => TM::Commands::LastProject
   }
   c.desc 'List projects'
   c.long_desc """
